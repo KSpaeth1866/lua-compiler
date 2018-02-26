@@ -1,0 +1,20 @@
+{
+  "name": "lua-compiler",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jison grammar.json && node compiler.js test.lua"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.14.1",
+    "eslint": "^4.18.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
+    "eslint-watch": "^3.1.3",
+    "jison": "^0.4.18"
+  },
+  "devDependencies": {}
+}

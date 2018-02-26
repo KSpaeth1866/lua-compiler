@@ -1,0 +1,148 @@
+{
+  "lex": {
+    "rules": [
+      ["\\s+",                        "/* skip whitespace */"],
+
+      ["local",                       "return 'LOCAL';"],
+      ["if",                          "return 'IF';"],
+      ["while",                       "return 'WHILE';"],
+      ["do",                          "return 'DO';"],
+      ["then",                        "return 'THEN';"],
+      ["end",                         "return 'END';"],
+      ["function",                    "return 'FUNCTION';"],
+      ["return",                      "return 'RETURN';"],
+
+      ["[a-zA-Z_]\\w*",               "return 'IDENTIFIER';"],
+      ["[0-9]+(?:\\.[0-9]+)?",        "return 'NUMBER';"],
+
+      ["==|\\<=|\\>=|\\<|\\>|\\~=",   "return 'COMPARATOR';"],
+
+      ["=",                           "return '=';"],
+      ["\\*",                         "return '*';"],
+      ["\\/",                         "return '/';"],
+      ["-",                           "return '-';"],
+      ["\\+",                         "return '+';"],
+
+      ["\\(",                         "return '(';"],
+      ["\\)",                         "return ')';"],
+      [",",                           "return ',';"],
+      ["$",                           "return 'EOF';"]
+    ]
+  },
+
+  "operators": [
+    ["left", "+", "-"],
+    ["left", "*", "/"],
+    ["left", "^"],
+    ["left", "UMINUS"]
+  ],
+
+  "start": "program",
+
+  "bnf": {
+    "program": [
+      [ "statementList EOF",         "return $1;"  ]
+    ],
+
+    "statementList": [
+      ["statement",                  "$$ = [$1];"],
+      ["statement statementList",    "$$ = [$1].concat($2);"]
+    ],
+
+    "statement": [
+      ["declaration",                "$$ = $1"],
+      ["if",                         "$$ = $1"],
+      ["while",                      "$$ = $1"],
+      ["assignment",                 "$$ = $1"],
+      ["function",                   "$$ = $1"],
+      ["return",                     "$$ = $1"]
+    ],
+
+    "declaration": [
+      [ "LOCAL IDENTIFIER = expression",
+        "$$ = {type: 'declaration', identifier: $2, value: $4};"
+      ]
+    ],
+
+    "if": [
+      [ "IF expression THEN statementList END",
+        "$$ = {type: 'if', condition: $2, body: $4};"]
+    ],
+
+    "while": [
+      [ "WHILE expression DO statementList END",
+        "$$ = {type: 'while', condition: $2, body: $4};"
+      ]
+    ],
+
+    "assignment": [
+      [ "IDENTIFIER = expression",
+        "$$ = {type: 'assignment', identifier: $1, value: $3};"
+      ]
+    ],
+
+    "function": [
+      [ "FUNCTION IDENTIFIER ( arguments ) statementList END",
+        "$$ = {type: 'function', name: $2, arguments: $4, body: $6};"
+      ]
+    ],
+
+    "return": [
+      [ "RETURN expression",
+        "$$ = {type: 'return', value: $2};"
+      ]
+    ],
+
+    "arguments": [
+      ["",                           "$$ = [];"],
+      ["expression",                 "$$ = [$1];"],
+      ["expression , arguments",     "$$ = [$1].concat($3);"]
+    ],
+
+    "expression": [
+      ["comparison",                 "$$ = $1;"],
+      ["addition",                   "$$ = $1;"],
+      ["subtraction",                "$$ = $1;"],
+      ["multiplication",             "$$ = $1;"],
+      ["division",                   "$$ = $1;"],
+      ["unitExpression",             "$$ = $1;"]
+    ],
+
+    "unitExpression": [
+      ["( expression )",             "$$ = $2;"],
+      ["NUMBER",                     "$$ = {type: 'number', value: $1};"],
+      ["IDENTIFIER",                 "$$ = {type: 'identifier', name: $1};"]
+    ],
+
+    "addition": [
+      [ "unitExpression + unitExpression",
+        "$$ = {type: 'math', left: $1, right: $3, operator: $2};"
+      ]
+    ],
+
+    "subtraction": [
+      [ "unitExpression - unitExpression",
+        "$$ = {type: 'math', left: $1, right: $3, operator: $2};"
+      ]
+    ],
+
+    "multiplication": [
+      [ "unitExpression * unitExpression",
+        "$$ = {type: 'math', left: $1, right: $3, operator: $2};"
+      ]
+    ],
+
+    "division": [
+      [ "unitExpression / unitExpression",
+        "$$ = {type: 'math', left: $1, right: $3, operator: $2};"
+      ]
+    ],
+
+    "comparison": [
+      [ "unitExpression COMPARATOR unitExpression",
+        "$$ = {type: 'comparison', operator: $2, left: $1, right: $3};"
+      ]
+    ]
+
+  }
+}
