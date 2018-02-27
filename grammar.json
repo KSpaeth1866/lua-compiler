@@ -52,6 +52,7 @@
     "statement": [
       ["declaration",                "$$ = $1"],
       ["if",                         "$$ = $1"],
+      ["if-else",                    "$$ = $1"],
       ["while",                      "$$ = $1"],
       ["assignment",                 "$$ = $1"],
       ["function",                   "$$ = $1"],
@@ -62,6 +63,11 @@
       [ "LOCAL IDENTIFIER = expression",
         "$$ = {type: 'declaration', identifier: $2, value: $4};"
       ]
+    ],
+
+    "if-else": [
+      [ "IF expression THEN statementList ELSE statementList END",
+        "$$ = {type: 'if', condition: $2, body: $4};"]
     ],
 
     "if": [
