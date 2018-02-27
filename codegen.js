@@ -15,7 +15,7 @@ const operators = {
   '<': '<',
 };
 
-const genSeq = (seq) => {
+const genCommaSeparatedSeq = (seq) => {
   return seq.map((node) => genNode(node)).join(', ');
 };
 
@@ -28,7 +28,7 @@ const rules = {
   while: (node) => `while (${genNode(node.condition)}) {\n${codegen(node.body)}}\n`,
   assignment: (node) => `${node.identifier} = ${genNode(node.value)}\n`,
   math: (node) => `${genNode(node.left)} ${node.operator} ${genNode(node.right)}`,
-  function: (node) => `function ${node.name}(${genSeq(node.arguments)}) {\n${codegen(node.body)}\n}\n`,
+  function: (node) => `function ${node.name}(${genCommaSeparatedSeq(node.arguments)}) {\n${codegen(node.body)}\n}\n`,
   return: (node) => `return ${genNode(node.value)}`,
 };
 
