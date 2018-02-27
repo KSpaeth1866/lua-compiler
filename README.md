@@ -8,5 +8,6 @@ Lua compiler to JS for simple operations
 1. `npm install`
 1. `npm test`
 
-Change the test.lua file to various Lua syntax to see how it would be compiled into JS
-Functionality includes variable declarations, math operations, if statements, while loops, function declarations, and more.
+Change the test.lua file to various Lua syntax to see how it would be compiled into JS.
+
+Functionality so far includes variable declarations, math operations, if statements, while loops, function declarations, and more.
